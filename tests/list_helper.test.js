@@ -59,4 +59,15 @@ describe('total likes', () => {
     const result = listHelper.totalLikes(biggerList)
     assert.strictEqual(result, 15)
   })
+
+  test('favorite blog', () => {
+    const result = listHelper.favoriteBlog(biggerList)
+    assert.deepStrictEqual(result, biggerList[1])
+  })
+
+  test('most blogs', () => {
+    const result = listHelper.mostBlogs(biggerList)
+    assert.deepStrictEqual(result, { author: 'Edsger W. Dijkstra', blogs: 1 })
+
+})
 })
