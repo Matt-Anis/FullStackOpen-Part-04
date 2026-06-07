@@ -26,6 +26,13 @@ test("all blogs are returned", async () => {
   assert.strictEqual(blogs.length, helper.initialBlogs.length);
 });
 
+test('checking that unique identifier is "id" instead of "_id"', async () => {
+  const blogs = await helper.blogInDb();
+
+  assert.ok(blogs[0].id);
+  assert.ok(!blogs[0]._id);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
