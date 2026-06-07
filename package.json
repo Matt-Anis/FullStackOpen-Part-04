@@ -1,7 +1,6 @@
 {
   "name": "blogger",
   "version": "1.0.0",
-  "description": "init repo",
   "homepage": "https://github.com/Matt-Anis/FullStackOpen-Part-04#readme",
   "bugs": {
     "url": "https://github.com/Matt-Anis/FullStackOpen-Part-04/issues"
@@ -15,9 +14,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "node --test",
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "test": "NODE_ENV=test node --test",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development node --watch index.js",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -29,6 +28,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.0",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "supertest": "^7.2.2"
   }
 }
