@@ -49,6 +49,19 @@ test("check that new posts are added successfully", async () => {
   assert.strictEqual(updatedBlogsInDb.length, currentBlogs.length + 1);
 });
 
+test("check that if adding a blog without the field 'likes' it gets automatically 0", async () => {
+  const newBlog = {
+    title: "this is a test note",
+    author: "me",
+    url: "https://fullstackopen.com/en/part4/testing_the_backend",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(201);
+
+  const blogs = await helper.blogInDb();
+  assert.strictEqual(blogs[blogs.length - 1]?.likes, 0);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
