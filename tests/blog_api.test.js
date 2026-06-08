@@ -82,12 +82,18 @@ test("check that inserting blogs without url will result in bad request ", async
 
 test("check that delete by id works", async () => {
   const blogs = await helper.blogInDb();
-  console.log(blogs[0]);
 
   await api.delete(`/api/blogs/${blogs[0].id}`).expect(204);
 
   const updatedBlogs = await helper.blogInDb();
   assert.strictEqual(updatedBlogs.length, blogs.length - 1);
+});
+
+test("check that updating post by id works", async () => {
+  const blogs = await helper.blogInDb();
+  blogs[0].title = "updated blog title test";
+
+  await api.put(`/api/blogs/${blogs[0].id}`).send(blogs[0]).expect(200);
 });
 
 after(async () => {
