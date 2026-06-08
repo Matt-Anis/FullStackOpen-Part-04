@@ -5,6 +5,7 @@ const supertest = require("supertest");
 const app = require("../app");
 const helper = require("./test_helper");
 const Blog = require("../models/blog");
+const { title } = require("node:process");
 
 const api = supertest(app);
 
@@ -31,6 +32,21 @@ test('checking that unique identifier is "id" instead of "_id"', async () => {
 
   assert.ok(blogs[0].id);
   assert.ok(!blogs[0]._id);
+});
+
+test("check that new posts are added successfully", async () => {
+  const currentBlogs = await helper.blogInDb();
+  const newBlog = {
+    title: "this is a test note",
+    author: "me",
+    url: "https://fullstackopen.com/en/part4/testing_the_backend",
+    likes: 0,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(201);
+
+  const updatedBlogsInDb = await helper.blogInDb();
+  assert.strictEqual(updatedBlogsInDb.length, currentBlogs.length + 1);
 });
 
 after(async () => {
