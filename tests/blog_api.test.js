@@ -62,6 +62,24 @@ test("check that if adding a blog without the field 'likes' it gets automaticall
   assert.strictEqual(blogs[blogs.length - 1]?.likes, 0);
 });
 
+test("check that inserting blogs without title will result in bad request ", async () => {
+  const newBlog = {
+    author: "me",
+    url: "https://fullstackopen.com/en/part4/testing_the_backend",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
+test("check that inserting blogs without url will result in bad request ", async () => {
+  const newBlog = {
+    title: "testing ",
+    author: "me",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
