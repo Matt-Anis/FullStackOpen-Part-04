@@ -2,7 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./utils/config");
 const blogRouter = require("./controllers/blogs");
+const userRouter = require("./controllers/users");
 const logger = require("./utils/logger");
+const middleware = require("./utils/middleware");
 
 const app = express();
 
@@ -19,14 +21,9 @@ mongoose
 
 app.use(express.json());
 app.use("/api/blogs", blogRouter);
+app.use("/api/users", userRouter);
 
-const errorHandler = (error, request, response, next) => {
-  if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
-  }
-  next(error);
-};
-
-app.use(errorHandler);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 module.exports = app;
