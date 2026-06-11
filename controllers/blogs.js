@@ -3,6 +3,14 @@ const Blog = require("../models/blog");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
+
 blogRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
     username: 1,
@@ -13,7 +21,23 @@ blogRouter.get("/", async (request, response) => {
 });
 
 blogRouter.post("/", async (request, response) => {
-  const blog = new Blog(request.body);
+  const body = new Blog(request.body);
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "UserId missing or not valid" });
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+  if (!user) {
+    return response.status(400).json({ error: "UserId missing or not valid" });
+  }
+
+  const blog = new Blog({
+    ...body,
+    user: user._id,
+  });
+
   const result = await blog.save();
   response.status(201).json(result);
 });
